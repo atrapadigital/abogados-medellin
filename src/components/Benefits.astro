@@ -1,0 +1,160 @@
+---
+const benefits = [
+	{
+		icon: '⚖️',
+		title: 'Abogados especialistas',
+		text: 'Equipo con posgrados en derecho penal, laboral y comercial, no solo abogados generales.',
+	},
+	{
+		icon: '⏱️',
+		title: 'Respuesta en menos de 24 horas',
+		text: 'Evaluamos tu caso y te contactamos el mismo día hábil con una ruta clara de acción.',
+	},
+	{
+		icon: '💼',
+		title: 'Honorarios flexibles',
+		text: 'Cuota litis y planes de pago según la complejidad y el tipo de tu caso.',
+	},
+	{
+		icon: '📁',
+		title: 'Seguimiento digital de tu caso',
+		text: 'Consulta el estado de tu proceso y tus documentos desde cualquier dispositivo.',
+	},
+	{
+		icon: '📍',
+		title: 'A minutos del centro de Medellín',
+		text: 'Oficinas en El Poblado, con parqueadero y fácil acceso en transporte público.',
+	},
+	{
+		icon: '🔒',
+		title: 'Confidencialidad absoluta',
+		text: 'Reserva profesional garantizada en cada consulta, documento y proceso judicial.',
+	},
+]
+---
+
+<section class="benefits" id="nosotros">
+	<div class="benefits-inner">
+		<div class="section-head reveal">
+			<span class="eyebrow">¿Por qué elegirnos?</span>
+			<h2>Representación legal en la que Medellín confía</h2>
+			<p>
+				Combinamos experiencia litigante, especialistas certificados y honorarios flexibles
+				para que defender tus derechos nunca sea una barrera.
+			</p>
+		</div>
+
+		<div class="benefits-grid">
+			{
+				benefits.map((b) => (
+					<div class="benefit-card reveal">
+						<div class="benefit-icon">{b.icon}</div>
+						<h3>{b.title}</h3>
+						<p>{b.text}</p>
+					</div>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.benefits {
+		padding: 96px 24px;
+	}
+
+	.benefits-inner {
+		max-width: 1160px;
+		margin: 0 auto;
+	}
+
+	.section-head {
+		max-width: 640px;
+		margin-bottom: 56px;
+	}
+
+	.eyebrow {
+		display: inline-block;
+		font-weight: 600;
+		font-size: 0.78rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-gold);
+		margin-bottom: 14px;
+	}
+
+	.section-head h2 {
+		font-size: clamp(1.8rem, 3vw, 2.5rem);
+		color: var(--color-ink);
+		margin-bottom: 16px;
+	}
+
+	.section-head p {
+		font-size: 1.05rem;
+		color: rgba(244, 238, 224, 0.65);
+		line-height: 1.6;
+	}
+
+	.benefits-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 24px;
+	}
+
+	.benefit-card {
+		background: var(--color-surface);
+		border-radius: 20px;
+		padding: 30px 26px;
+		border: 1px solid var(--color-line);
+		transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+	}
+
+	.benefit-card:hover {
+		transform: translateY(-6px);
+		box-shadow: 0 22px 38px -18px rgba(0, 0, 0, 0.55);
+		border-color: rgba(200, 162, 74, 0.4);
+	}
+
+	.benefit-card:hover .benefit-icon {
+		transform: scale(1.08) rotate(-4deg);
+	}
+
+	.benefit-icon {
+		font-size: 1.8rem;
+		width: 54px;
+		height: 54px;
+		border-radius: 14px;
+		background: var(--color-surface-2);
+		display: grid;
+		place-items: center;
+		margin-bottom: 18px;
+		transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.benefit-card h3 {
+		font-size: 1.2rem;
+		color: var(--color-ink);
+		margin-bottom: 10px;
+	}
+
+	.benefit-card p {
+		font-size: 0.92rem;
+		line-height: 1.55;
+		color: rgba(244, 238, 224, 0.6);
+	}
+
+	@media (max-width: 900px) {
+		.benefits-grid {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.benefits {
+			padding: 64px 20px;
+		}
+		.benefits-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

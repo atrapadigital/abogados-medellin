@@ -1,0 +1,396 @@
+---
+const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY ?? 'TU_ACCESS_KEY_DE_WEB3FORMS';
+---
+
+<section class="contact" id="contacto">
+	<div class="contact-inner">
+		<div class="contact-copy reveal">
+			<span class="eyebrow">Última oportunidad</span>
+			<h2>Agenda hoy y recibe tu <em>primera consulta gratuita</em></h2>
+			<p class="contact-lead">
+				Cupos limitados por semana. Completa el formulario y uno de nuestros abogados
+				evaluará tu caso y te contactará en menos de 2 horas hábiles.
+			</p>
+
+			<ul class="contact-points">
+				<li>
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"></path></svg>
+					Evaluación inicial de tu caso sin costo
+				</li>
+				<li>
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"></path></svg>
+					Confirmación por WhatsApp o llamada
+				</li>
+				<li>
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"></path></svg>
+					Confidencialidad garantizada en todo momento
+				</li>
+			</ul>
+
+			<div class="contact-info-card">
+				<div>
+					<strong>📍 Dirección</strong>
+					<span>Cra. 43A # 5A-113, El Poblado, Medellín</span>
+				</div>
+				<div>
+					<strong>🕐 Horario</strong>
+					<span>Lun a Vie 8am–6pm · Sáb 9am–1pm</span>
+				</div>
+				<div>
+					<strong>📞 Teléfono / WhatsApp</strong>
+					<span>300 456 7890</span>
+				</div>
+			</div>
+
+			<div class="map-frame">
+				<iframe
+					title="Ubicación de Salazar & Reyes Abogados en El Poblado, Medellín"
+					src="https://www.google.com/maps?q=El+Poblado,Medell%C3%ADn,Antioquia,Colombia&z=14&output=embed"
+					loading="lazy"
+					referrerpolicy="no-referrer-when-downgrade"
+				></iframe>
+			</div>
+		</div>
+
+		<div class="contact-form-card reveal">
+			<h3>Solicita tu consulta</h3>
+			<p class="form-subtitle">Respuesta garantizada en menos de 2 horas hábiles</p>
+
+			<form id="firm-form" action="https://api.web3forms.com/submit" method="POST">
+				<input type="hidden" name="access_key" value={web3formsKey} />
+				<input type="hidden" name="subject" value="Nueva consulta — Salazar & Reyes Abogados" />
+				<input type="checkbox" name="botcheck" class="hidden-field" tabindex="-1" autocomplete="off" />
+
+				<div class="field">
+					<label for="name">Nombre completo</label>
+					<input id="name" name="name" type="text" placeholder="Tu nombre" required />
+				</div>
+
+				<div class="field-row">
+					<div class="field">
+						<label for="phone">Celular / WhatsApp</label>
+						<input id="phone" name="phone" type="tel" placeholder="300 000 0000" required />
+					</div>
+					<div class="field">
+						<label for="email">Correo electrónico</label>
+						<input id="email" name="email" type="email" placeholder="tucorreo@email.com" required />
+					</div>
+				</div>
+
+				<div class="field">
+					<label for="service">Área legal de interés</label>
+					<select id="service" name="service" required>
+						<option value="" disabled selected>Selecciona un área</option>
+						<option>Derecho Civil</option>
+						<option>Derecho Penal</option>
+						<option>Derecho Laboral</option>
+						<option>Derecho Comercial</option>
+						<option>Derecho de Familia</option>
+						<option>Derecho Inmobiliario</option>
+						<option>Otro</option>
+					</select>
+				</div>
+
+				<div class="field">
+					<label for="message">Cuéntanos brevemente tu caso (opcional)</label>
+					<textarea id="message" name="message" rows="3" placeholder="Ej: necesito asesoría sobre un despido..."></textarea>
+				</div>
+
+				<button type="submit" class="btn-submit">
+					<span class="btn-label">Solicitar consulta gratuita</span>
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+				</button>
+
+				<p class="form-disclaimer">
+					Al enviar aceptas ser contactado por Salazar & Reyes Abogados. No compartimos tus
+					datos con terceros.
+				</p>
+
+				<p id="form-status" class="form-status" role="status"></p>
+			</form>
+		</div>
+	</div>
+</section>
+
+<script>
+	const form = document.getElementById('firm-form') as HTMLFormElement | null;
+	const status = document.getElementById('form-status');
+
+	form?.addEventListener('submit', async (event) => {
+		event.preventDefault();
+		if (!status) return;
+
+		const submitBtn = form.querySelector('.btn-submit') as HTMLButtonElement | null;
+		const label = form.querySelector('.btn-label');
+		const originalLabel = label?.textContent ?? '';
+
+		if (submitBtn) submitBtn.disabled = true;
+		if (label) label.textContent = 'Enviando...';
+		status.textContent = '';
+		status.className = 'form-status';
+
+		try {
+			const formData = new FormData(form);
+			const res = await fetch(form.action, {
+				method: 'POST',
+				body: formData,
+				headers: { Accept: 'application/json' },
+			});
+			const result = await res.json();
+
+			if (result.success) {
+				status.textContent = '¡Listo! Recibimos tu solicitud, te contactaremos muy pronto.';
+				status.classList.add('success');
+				form.reset();
+			} else {
+				throw new Error(result.message || 'Error al enviar');
+			}
+		} catch (err) {
+			status.textContent = 'No pudimos enviar el formulario. Escríbenos por WhatsApp.';
+			status.classList.add('error');
+		} finally {
+			if (submitBtn) submitBtn.disabled = false;
+			if (label) label.textContent = originalLabel;
+		}
+	});
+</script>
+
+<style>
+	.contact {
+		padding: 96px 24px;
+		background: var(--color-bg);
+	}
+
+	.contact-inner {
+		max-width: 1160px;
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 56px;
+		align-items: start;
+	}
+
+	.eyebrow {
+		display: inline-block;
+		font-weight: 600;
+		font-size: 0.78rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-gold);
+		margin-bottom: 14px;
+	}
+
+	.contact-copy h2 {
+		font-size: clamp(1.8rem, 3vw, 2.4rem);
+		color: var(--color-ink);
+		line-height: 1.15;
+	}
+
+	.contact-copy h2 em {
+		font-style: italic;
+		color: var(--color-gold-light);
+	}
+
+	.contact-lead {
+		margin-top: 20px;
+		font-size: 1rem;
+		line-height: 1.6;
+		color: rgba(244, 238, 224, 0.68);
+	}
+
+	.contact-points {
+		list-style: none;
+		margin: 28px 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.contact-points li {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-size: 0.92rem;
+		font-weight: 600;
+		color: var(--color-ink);
+	}
+
+	.contact-points svg {
+		color: var(--color-gold-light);
+		flex-shrink: 0;
+	}
+
+	.contact-info-card {
+		background: var(--color-surface);
+		border: 1px solid var(--color-line);
+		border-radius: 18px;
+		padding: 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		margin-bottom: 20px;
+	}
+
+	.contact-info-card strong {
+		display: block;
+		font-size: 0.85rem;
+		color: var(--color-gold-light);
+		margin-bottom: 2px;
+	}
+
+	.contact-info-card span {
+		font-size: 0.85rem;
+		color: rgba(244, 238, 224, 0.65);
+	}
+
+	.map-frame {
+		border-radius: 18px;
+		overflow: hidden;
+		min-height: 220px;
+		border: 1px solid var(--color-line);
+		box-shadow: 0 16px 30px -18px rgba(0, 0, 0, 0.6);
+		filter: grayscale(0.5) invert(0.92) contrast(0.92);
+	}
+
+	.map-frame iframe {
+		width: 100%;
+		height: 220px;
+		border: 0;
+		display: block;
+	}
+
+	.contact-form-card {
+		background: var(--color-surface);
+		border: 1px solid var(--color-line);
+		border-radius: 24px;
+		padding: 40px;
+		box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+	}
+
+	.contact-form-card h3 {
+		font-size: 1.4rem;
+		color: var(--color-ink);
+	}
+
+	.form-subtitle {
+		margin-top: 8px;
+		font-size: 0.85rem;
+		color: rgba(244, 238, 224, 0.5);
+		margin-bottom: 28px;
+	}
+
+	form {
+		display: flex;
+		flex-direction: column;
+		gap: 18px;
+	}
+
+	.hidden-field {
+		display: none;
+	}
+
+	.field {
+		display: flex;
+		flex-direction: column;
+		gap: 7px;
+		flex: 1;
+	}
+
+	.field-row {
+		display: flex;
+		gap: 16px;
+	}
+
+	label {
+		font-size: 0.8rem;
+		font-weight: 600;
+		color: var(--color-gold-light);
+	}
+
+	input,
+	select,
+	textarea {
+		font-family: var(--font-body);
+		font-size: 0.95rem;
+		padding: 12px 14px;
+		border-radius: 10px;
+		border: 1.5px solid var(--color-line);
+		background: var(--color-surface-2);
+		color: var(--color-ink);
+		outline: none;
+		transition: border-color 0.2s ease;
+	}
+
+	input:focus,
+	select:focus,
+	textarea:focus {
+		border-color: var(--color-gold);
+	}
+
+	textarea {
+		resize: vertical;
+		font-family: var(--font-body);
+	}
+
+	.btn-submit {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+		background: var(--color-gold);
+		color: var(--color-bg);
+		border: none;
+		font-family: var(--font-body);
+		font-weight: 600;
+		font-size: 0.98rem;
+		padding: 16px;
+		border-radius: 999px;
+		cursor: pointer;
+		margin-top: 8px;
+		transition: background 0.2s ease, transform 0.2s ease;
+	}
+
+	.btn-submit:hover:not(:disabled) {
+		background: var(--color-gold-light);
+		transform: translateY(-1px);
+	}
+
+	.btn-submit:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+
+	.form-disclaimer {
+		font-size: 0.74rem;
+		color: rgba(244, 238, 224, 0.45);
+		text-align: center;
+	}
+
+	.form-status {
+		text-align: center;
+		font-size: 0.88rem;
+		font-weight: 600;
+		min-height: 1.2em;
+	}
+
+	.form-status.success {
+		color: var(--color-gold-light);
+	}
+
+	.form-status.error {
+		color: #e08a6b;
+	}
+
+	@media (max-width: 900px) {
+		.contact-inner {
+			grid-template-columns: 1fr;
+		}
+		.field-row {
+			flex-direction: column;
+		}
+		.contact-form-card {
+			padding: 28px;
+		}
+	}
+</style>

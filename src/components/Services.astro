@@ -1,0 +1,196 @@
+---
+const services = [
+	{ name: 'Derecho Civil', desc: 'Contratos, arrendamientos y responsabilidad civil.', price: 'Consulta desde $150.000' },
+	{ name: 'Derecho Penal', desc: 'Defensa técnica en todas las etapas del proceso.', price: 'Desde $500.000' },
+	{ name: 'Derecho Laboral', desc: 'Despidos, liquidaciones y acoso laboral.', price: 'Desde $120.000' },
+	{ name: 'Derecho Comercial', desc: 'Constitución de sociedades y contratos mercantiles.', price: 'Desde $300.000' },
+	{ name: 'Derecho de Familia', desc: 'Divorcios, custodia y procesos de sucesión.', price: 'Desde $180.000' },
+	{ name: 'Derecho Inmobiliario', desc: 'Compraventas, títulos y litigios de propiedad.', price: 'Desde $200.000' },
+]
+
+import { getCalendlyUrl } from '../lib/calendly';
+
+const calendlyUrl = getCalendlyUrl();
+---
+
+<section class="services" id="servicios">
+	<div class="services-inner">
+		<div class="services-grid">
+			<div class="services-visual reveal">
+				<div class="service-image-frame">
+					<img
+						src="https://cdn.pixabay.com/photo/2018/11/03/22/35/law-office-3792958_1280.jpg"
+						alt="Oficina de abogados moderna con sala de reuniones"
+						loading="lazy"
+					/>
+				</div>
+				<p class="image-caption">📍 Foto real de nuestras oficinas en El Poblado</p>
+			</div>
+
+			<div class="services-list-wrap reveal">
+				<span class="eyebrow">Áreas de práctica</span>
+				<h2>Asesoría legal integral, en un solo bufete</h2>
+
+				<ul class="services-list">
+					{
+						services.map((s) => (
+							<li>
+								<div class="service-row">
+									<div class="service-info">
+										<h3>{s.name}</h3>
+										<p>{s.desc}</p>
+									</div>
+									<span class="service-price">{s.price}</span>
+								</div>
+							</li>
+						))
+					}
+				</ul>
+
+				<button type="button" class="btn-primary" data-calendly-url={calendlyUrl}>
+					Ver disponibilidad de consulta
+				</button>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.services {
+		padding: 96px 24px;
+		background: var(--color-section);
+		color: var(--color-ink);
+		position: relative;
+		border-top: 1px solid var(--color-line);
+		border-bottom: 1px solid var(--color-line);
+	}
+
+	.services-inner {
+		max-width: 1160px;
+		margin: 0 auto;
+	}
+
+	.services-grid {
+		display: grid;
+		grid-template-columns: 0.85fr 1.15fr;
+		gap: 56px;
+		align-items: center;
+	}
+
+	.service-image-frame {
+		border-radius: 24px;
+		overflow: hidden;
+		aspect-ratio: 1 / 1;
+		box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.65);
+		border: 1px solid var(--color-line);
+	}
+
+	.service-image-frame img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.service-image-frame:hover img {
+		transform: scale(1.06);
+	}
+
+	.image-caption {
+		margin-top: 12px;
+		font-size: 0.8rem;
+		color: rgba(244, 238, 224, 0.5);
+		text-align: center;
+	}
+
+	.eyebrow {
+		display: inline-block;
+		font-weight: 600;
+		font-size: 0.78rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-gold-light);
+		margin-bottom: 14px;
+	}
+
+	.services-list-wrap h2 {
+		font-size: clamp(1.7rem, 2.8vw, 2.3rem);
+		margin-bottom: 32px;
+		max-width: 20ch;
+	}
+
+	.services-list {
+		list-style: none;
+		margin: 0 0 36px;
+		padding: 0;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.services-list li {
+		border-bottom: 1px solid var(--color-line);
+	}
+
+	.service-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 18px 8px;
+		border-radius: 10px;
+		transition: background 0.3s ease, padding 0.3s ease;
+	}
+
+	.services-list li:hover .service-row {
+		background: rgba(200, 162, 74, 0.06);
+		padding-left: 14px;
+	}
+
+	.service-info h3 {
+		font-size: 1.05rem;
+		margin-bottom: 4px;
+	}
+
+	.service-info p {
+		font-size: 0.85rem;
+		color: rgba(244, 238, 224, 0.55);
+	}
+
+	.service-price {
+		font-weight: 600;
+		font-size: 0.9rem;
+		color: var(--color-gold-light);
+		white-space: nowrap;
+	}
+
+	.btn-primary {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		background: var(--color-gold);
+		color: var(--color-bg);
+		text-decoration: none;
+		border: none;
+		font-family: var(--font-body);
+		font-size: 0.98rem;
+		font-weight: 600;
+		padding: 16px 26px;
+		border-radius: 999px;
+		cursor: pointer;
+		transition: transform 0.2s ease, background 0.2s ease;
+	}
+
+	.btn-primary:hover {
+		background: var(--color-gold-light);
+		transform: translateY(-2px);
+	}
+
+	@media (max-width: 900px) {
+		.services-grid {
+			grid-template-columns: 1fr;
+		}
+		.services-visual {
+			max-width: 340px;
+			margin: 0 auto;
+		}
+	}
+</style>
